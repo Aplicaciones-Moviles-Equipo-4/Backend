@@ -1,6 +1,6 @@
 package com.eventify.platform.operation.domain.services;
 
-import com.eventify.platform.operation.domain.model.aggreagates.Review;
+import com.eventify.platform.operation.domain.model.aggregates.Review;
 import com.eventify.platform.operation.domain.model.commands.CreateReviewCommand;
 import com.eventify.platform.operation.domain.model.commands.UpdateReviewCommand;
 

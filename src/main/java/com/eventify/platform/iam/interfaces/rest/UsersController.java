@@ -87,7 +87,7 @@ public class UsersController {
             @ApiResponse(responseCode = "201", description = "User created successfully."),
             @ApiResponse(responseCode = "404", description = " Bad request."),
     })
-    public ResponseEntity<UserResource> createUser(@PathVariable String userId,@RequestBody SignUpResource signUpResource) {
+    public ResponseEntity<UserResource> createUser(@RequestBody SignUpResource signUpResource) {
         var signUpCommand = SignUpCommandFromResourceAssembler.toCommandFromResource(signUpResource);
         var user = userCommandService.handle(signUpCommand);
         if (user.isEmpty()) {

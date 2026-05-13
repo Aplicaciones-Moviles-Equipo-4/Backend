@@ -1,16 +1,18 @@
 package com.eventify.platform.operation.application.internal.commandservices;
 
 import com.eventify.platform.operation.application.internal.outboundservices.acl.ExternalProfileService;
-import com.eventify.platform.operation.domain.model.aggreagates.Review;
+import com.eventify.platform.operation.domain.model.aggregates.Review;
 import com.eventify.platform.operation.domain.model.commands.CreateReviewCommand;
 import com.eventify.platform.operation.domain.model.commands.UpdateReviewCommand;
 import com.eventify.platform.operation.domain.services.ReviewCommandService;
 import com.eventify.platform.operation.infrastructure.persistence.jpa.repositories.ReviewRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
+@Transactional
 public class ReviewCommandServiceImpl implements ReviewCommandService {
     private final ReviewRepository reviewRepository;
     private final ExternalProfileService externalProfileService;

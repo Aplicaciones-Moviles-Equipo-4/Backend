@@ -2,7 +2,7 @@ package com.eventify.platform.operation.domain.model.commands;
 
 import java.util.Date;
 
-public record CreateReviewCommand(String content, String fullName,Date socialEventDate, Integer rating, Long profileId) {
+public record CreateReviewCommand(String content, String fullName,Date socialEventDate, Integer rating, Long profileId, Long socialEventId) {
     public CreateReviewCommand{
         if (content == null || content.isBlank()) {
             throw new IllegalArgumentException("Content cannot be null or empty.");
@@ -15,6 +15,9 @@ public record CreateReviewCommand(String content, String fullName,Date socialEve
         }
         if (socialEventDate == null) {
             throw new IllegalArgumentException("Social event date cannot be null or empty.");
+        }
+        if (socialEventId == null) {
+            throw new IllegalArgumentException("Social event ID cannot be null or empty.");
         }
     }
 }

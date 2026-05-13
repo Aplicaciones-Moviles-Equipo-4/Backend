@@ -6,6 +6,7 @@ import com.eventify.platform.iam.domain.model.valueobjects.Roles;
 import com.eventify.platform.iam.domain.services.RoleCommandService;
 import com.eventify.platform.iam.infrastructure.persistence.jpa.repositories.RoleRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 
@@ -13,6 +14,7 @@ import java.util.Arrays;
  * Implementation of {@link RoleCommandService} to handle {@link SeedRolesCommand}
  */
 @Service
+@Transactional
 public class RoleCommandServiceImpl implements RoleCommandService {
 
     private final RoleRepository roleRepository;

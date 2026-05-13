@@ -11,7 +11,8 @@ public class CreateReviewCommandFromResourceAssembler {
             resource.fullName(),
             resource.socialEventDate(),
             resource.rating(),
-            resource.profileId()
+            resource.profileId(),
+            resource.socialEventId()
         );
     }
 }

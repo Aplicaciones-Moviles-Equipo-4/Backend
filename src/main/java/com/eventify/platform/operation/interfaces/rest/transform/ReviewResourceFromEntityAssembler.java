@@ -1,6 +1,6 @@
 package com.eventify.platform.operation.interfaces.rest.transform;
 
-import com.eventify.platform.operation.domain.model.aggreagates.Review;
+import com.eventify.platform.operation.domain.model.aggregates.Review;
 import com.eventify.platform.operation.interfaces.rest.resources.ReviewResource;
 
 public class ReviewResourceFromEntityAssembler {

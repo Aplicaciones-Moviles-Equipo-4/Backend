@@ -27,7 +27,7 @@ import java.util.List;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-@RequestMapping(value="api/v1/reviews", produces = APPLICATION_JSON_VALUE)
+@RequestMapping(value="/api/v1/reviews", produces = APPLICATION_JSON_VALUE)
 @Tag(name = "Reviews", description = "Available Review Endpoints")
 public class ReviewsController {
     private final ReviewCommandService reviewCommandService;
@@ -78,7 +78,7 @@ public class ReviewsController {
     public ResponseEntity<List<ReviewResource>> getReviewsByProfileId(@PathVariable Long profileId) {
         var assignedProfileId = new ProfileId(profileId);
         var existByProfileIdQuery = new ExistByProfileIdQuery(assignedProfileId);
-        if (reviewQueryService.handle(existByProfileIdQuery)) return ResponseEntity.badRequest().build();
+        if (!reviewQueryService.handle(existByProfileIdQuery)) return ResponseEntity.notFound().build();
         var getReviewByProfileIdQuery = new GetReviewByProfileIdQuery(assignedProfileId);
         var reviews = reviewQueryService.handle(getReviewByProfileIdQuery);
         var reviewResources = reviews.stream().map(ReviewResourceFromEntityAssembler::toResourceFromEntity).toList();

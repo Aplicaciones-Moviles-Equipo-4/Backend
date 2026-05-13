@@ -1,4 +1,4 @@
-package com.eventify.platform.operation.domain.model.aggreagates;
+package com.eventify.platform.operation.domain.model.aggregates;
 
 import com.eventify.platform.operation.domain.model.commands.CreateReviewCommand;
 import com.eventify.platform.operation.domain.model.valueobjects.ProfileId;
@@ -39,6 +39,7 @@ public class Review extends AuditableAbstractAggregateRoot<Review> {
         this.fullName = command.fullName();
         this.socialEventDate = command.socialEventDate();
         this.profileId = new ProfileId(command.profileId());
+        this.socialEventId = new SocialEventId(command.socialEventId());
     }
 
     public Long getProfileId() {

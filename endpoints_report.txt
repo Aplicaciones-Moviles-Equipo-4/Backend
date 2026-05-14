@@ -1,0 +1,261 @@
+GUÍA DE INTEGRACIÓN DE ENDPOINTS - EVENTIFY PLATFORM
+
+Esta guía detalla la estructura de datos necesaria para cada endpoint, facilitando su integración en el frontend (Kotlin/Android).
+
+================================================================================
+1. IAM (Identity and Access Management)
+================================================================================
+
+* [POST] /api/v1/authentication/sign-in
+  - Descripción: Autentica a un usuario y devuelve un token JWT.
+  - Request Body:
+    {
+      "username": "usuario123",
+      "password": "password123"
+    }
+  - Response (200 OK):
+    {
+      "id": 1,
+      "username": "usuario123",
+      "token": "eyJhbGciOiJIUzI1NiJ..."
+    }
+
+* [POST] /api/v1/authentication/sign-up
+  - Descripción: Registra a un nuevo usuario en el sistema.
+  - Request Body:
+    {
+      "username": "usuario123",
+      "password": "password123",
+      "roles": ["ROLE_USER"]
+    }
+  - Response (201 Created):
+    {
+      "id": 1,
+      "username": "usuario123",
+      "roles": ["ROLE_USER"]
+    }
+
+* [GET] /api/v1/roles
+  - Descripción: Obtiene todos los roles disponibles.
+  - Response (200 OK):
+    [
+      { "id": 1, "name": "ROLE_ADMIN" },
+      { "id": 2, "name": "ROLE_USER" }
+    ]
+
+* [GET] /api/v1/users
+  - Descripción: Obtiene la lista de todos los usuarios.
+  - Response (200 OK):
+    [
+      { "id": 1, "username": "admin", "roles": ["ROLE_ADMIN"] },
+      { "id": 2, "username": "usuario1", "roles": ["ROLE_USER"] }
+    ]
+
+* [GET] /api/v1/users/{userId}
+  - Descripción: Obtiene los detalles de un usuario por su ID.
+  - Path Variable: userId (Long)
+  - Response (200 OK):
+    {
+      "id": 1,
+      "username": "usuario123",
+      "roles": ["ROLE_USER"]
+    }
+
+================================================================================
+2. PROFILES (Gestión de Perfiles, Álbumes y Catálogos)
+================================================================================
+
+* [POST] /api/v1/profiles
+  - Descripción: Crea un nuevo perfil.
+  - Request Body:
+    {
+      "firstName": "Juan",
+      "lastName": "Pérez",
+      "email": "juan@example.com",
+      "street": "Av. Primavera",
+      "number": "123",
+      "city": "Lima",
+      "postalCode": "15001",
+      "country": "Perú",
+      "type": "ORGANIZER"
+    }
+  - Response (201 Created):
+    {
+      "id": 1,
+      "firstName": "Juan",
+      "lastName": "Pérez",
+      "fullName": "Juan Pérez",
+      "email": "juan@example.com",
+      "street": "Av. Primavera",
+      "number": "123",
+      "city": "Lima",
+      "postalCode": "15001",
+      "country": "Perú",
+      "fullAddress": "Av. Primavera 123, Lima, 15001, Perú",
+      "type": "ORGANIZER"
+    }
+
+* [GET] /api/v1/profiles/{profileId}
+  - Descripción: Obtiene un perfil por su ID.
+  - Response (200 OK): Mismo formato que el POST de profiles.
+
+* [GET] /api/v1/profiles/email/{email}
+  - Descripción: Obtiene un perfil por su correo electrónico.
+  - Response (200 OK): Mismo formato que el POST de profiles.
+
+* [POST] /api/v1/{profileId}/albums
+  - Descripción: Crea un álbum de fotos.
+  - Request Body:
+    {
+      "profileId": 1,
+      "title": "Boda Playa",
+      "description": "Fotos de mi último evento",
+      "photos": ["https://foto1.jpg", "https://foto2.jpg"]
+    }
+  - Response (201 Created):
+    {
+      "id": 1,
+      "profileId": 1,
+      "title": "Boda Playa",
+      "description": "Fotos de mi último evento",
+      "photos": ["https://foto1.jpg", "https://foto2.jpg"]
+    }
+
+* [POST] /api/v1/{profileId}/service-catalogs
+  - Descripción: Crea un catálogo de servicios.
+  - Request Body:
+    {
+      "profileId": 1,
+      "title": "Catering Premium",
+      "description": "Servicio de comida gourmet",
+      "category": "Food",
+      "priceFrom": 50.0,
+      "priceTo": 150.0
+    }
+  - Response (201 Created):
+    {
+      "id": 1,
+      "profileId": 1,
+      "title": "Catering Premium",
+      "description": "Servicio de comida gourmet",
+      "category": "Food",
+      "priceFrom": 50.0,
+      "priceTo": 150.0
+    }
+
+================================================================================
+3. PLANNING (Eventos Sociales y Cotizaciones)
+================================================================================
+
+* [POST] /api/v1/social-events
+  - Descripción: Crea un nuevo evento social.
+  - Request Body:
+    {
+      "title": "Boda Ana y Luis",
+      "place": "Hotel Westin",
+      "date": "2026-12-24",
+      "customerName": "Ana Pérez",
+      "status": "Active"
+    }
+  - Response (201 Created):
+    {
+      "id": 1,
+      "title": "Boda Ana y Luis",
+      "date": "2026-12-24",
+      "customerName": "Ana Pérez",
+      "place": "Hotel Westin",
+      "status": "Active"
+    }
+
+* [GET] /api/v1/social-events/status/{status}
+  - Descripción: Filtra eventos por estado (ej: Active, Completed).
+  - Response (200 OK): Lista de SocialEventResource.
+
+* [POST] /api/v1/quotes
+  - Descripción: Crea una nueva cotización.
+  - Request Body:
+    {
+      "title": "Cotización Buffet",
+      "eventType": "WEDDING",
+      "guestQuantity": 100,
+      "location": "Miraflores",
+      "totalPrice": 5000.0,
+      "state": "PENDING",
+      "eventDate": "2026-12-24T18:00:00.000Z",
+      "organizerId": 1,
+      "hostId": 2
+    }
+  - Response (201 Created):
+    {
+      "quoteId": "UUID-STRING",
+      "title": "Cotización Buffet",
+      "eventType": "WEDDING",
+      "guestQuantity": 100,
+      "location": "Miraflores",
+      "totalPrice": 5000.0,
+      "state": "PENDING",
+      "eventDate": "2026-12-24T18:00:00.000Z",
+      "organizerId": 1,
+      "hostId": 2
+    }
+
+* [POST] /api/v1/quotes/{quoteId}/service-items
+  - Descripción: Agrega un item a la cotización.
+  - Request Body:
+    {
+      "description": "Decoración Floral",
+      "quantity": 1,
+      "unitPrice": 1200.0,
+      "totalPrice": 1200.0,
+      "quoteId": "UUID-STRING"
+    }
+  - Response (201 Created):
+    {
+      "id": "ITEM-UUID",
+      "description": "Decoración Floral",
+      "quantity": 1,
+      "unitPrice": 1200.0,
+      "totalPrice": 1200.0,
+      "quoteId": "UUID-STRING"
+    }
+
+================================================================================
+4. OPERATION (Reseñas y Feedback)
+================================================================================
+
+* [POST] /api/v1/reviews
+  - Descripción: Crea una nueva reseña para un perfil.
+  - Request Body:
+    {
+      "content": "Excelente servicio de catering!",
+      "fullName": "Ana Pérez",
+      "socialEventDate": "2026-12-24T00:00:00.000Z",
+      "rating": 5,
+      "profileId": 1,
+      "socialEventId": 1
+    }
+  - Response (201 Created):
+    {
+      "Id": 1,
+      "content": "Excelente servicio de catering!",
+      "fullName": "Ana Pérez",
+      "socialEventDate": "2026-12-24T00:00:00.000Z",
+      "rating": 5,
+      "profileId": 1
+    }
+
+* [GET] /api/v1/reviews/profile/{profileId}
+  - Descripción: Obtiene todas las reseñas de un organizador.
+  - Response (200 OK): Lista de reseñas en el formato anterior.
+
+* [PUT] /api/v1/reviews/{reviewId}
+  - Descripción: Actualiza el contenido o calificación de una reseña.
+  - Request Body:
+    {
+      "content": "Actualizado: Fue regular.",
+      "fullName": "Ana Pérez",
+      "socialEventDate": "2026-12-24T00:00:00.000Z",
+      "rating": 3,
+      "profileId": 1
+    }
+  - Response (200 OK): Reseña actualizada.

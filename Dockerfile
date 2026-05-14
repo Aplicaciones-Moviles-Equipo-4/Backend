@@ -25,16 +25,14 @@ COPY src ./src
 RUN mvn package -DskipTests
 
 # Step 2: Create a runtime image
-# Copy the Spring Boot JAR file into the container
 FROM eclipse-temurin:24-jre AS runtime
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
 # Step 3: Configure and run the application
-# Expose the port your Spring Boot application listens on (default is 8080)
+ENV SPRING_PROFILES_ACTIVE=prod
 EXPOSE 8080
-# Define the command to run the Spring Boot application
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE}", "-jar", "app.jar"]
 
 # Note: The application will run with the 'prod' profile as set in the build stage.
 # This Dockerfile is designed to be used in a CI/CD pipeline or for local development.

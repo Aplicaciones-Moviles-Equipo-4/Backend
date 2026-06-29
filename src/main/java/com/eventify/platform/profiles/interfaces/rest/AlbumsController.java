@@ -2,12 +2,17 @@ package com.eventify.platform.profiles.interfaces.rest;
 
 import com.eventify.platform.profiles.domain.model.commands.CreateAlbumCommand;
 import com.eventify.platform.profiles.domain.model.commands.UpdateAlbumCommand;
+import com.eventify.platform.profiles.domain.model.queries.GetProfileByIdQuery;
+import com.eventify.platform.profiles.domain.model.valueobjects.ProfileType;
+import com.eventify.platform.profiles.domain.services.ProfileQueryService;
+import com.eventify.platform.profiles.application.internal.outboundservices.ImageStorageService;
 import com.eventify.platform.profiles.domain.model.queries.GetAlbumByIdQuery;
 import com.eventify.platform.profiles.domain.model.queries.GetAlbumsByProfileIdQuery;
 import com.eventify.platform.profiles.domain.services.AlbumCommandService;
 import com.eventify.platform.profiles.domain.services.AlbumQueryService;
 import com.eventify.platform.profiles.interfaces.rest.resources.AlbumResource;
 import com.eventify.platform.profiles.interfaces.rest.resources.CreateAlbumResource;
+import com.eventify.platform.profiles.interfaces.rest.resources.ImageUploadResource;
 import com.eventify.platform.profiles.interfaces.rest.transform.AlbumResourceFromEntityAssembler;
 import com.eventify.platform.profiles.interfaces.rest.transform.CreateAlbumCommandFromResourceAssembler;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -30,10 +36,15 @@ public class AlbumsController {
 
     private final AlbumCommandService albumCommandService;
     private final AlbumQueryService albumQueryService;
+    private final ProfileQueryService profileQueryService;
+    private final ImageStorageService imageStorageService;
 
-    public AlbumsController(AlbumCommandService albumCommandService, AlbumQueryService albumQueryService) {
+    public AlbumsController(AlbumCommandService albumCommandService, AlbumQueryService albumQueryService,
+                            ProfileQueryService profileQueryService, ImageStorageService imageStorageService) {
         this.albumCommandService = albumCommandService;
         this.albumQueryService = albumQueryService;
+        this.profileQueryService = profileQueryService;
+        this.imageStorageService = imageStorageService;
     }
 
     /**
@@ -60,6 +71,24 @@ public class AlbumsController {
         var albums = albumQueryService.handle(new GetAlbumsByProfileIdQuery(profileId));
         var resources = albums.stream().map(AlbumResourceFromEntityAssembler::toResourceFromEntity).toList();
         return ResponseEntity.ok(resources);
+    }
+
+    /**
+     * Upload an album image and return a public Cloudinary URL.
+     */
+    @Operation(summary = "Upload Album Image")
+    @PostMapping(value = "/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> uploadAlbumImage(@PathVariable Long profileId, @RequestParam("file") MultipartFile file) {
+        var profile = profileQueryService.handle(new GetProfileByIdQuery(profileId));
+        if (profile.isEmpty()) return ResponseEntity.notFound().build();
+        if (profile.get().getType() != ProfileType.ORGANIZER) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
+        var uploadedImage = imageStorageService.uploadAlbumImage(profileId, file);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ImageUploadResource(
+                uploadedImage.url(),
+                uploadedImage.secureUrl(),
+                uploadedImage.publicId()
+        ));
     }
 
     /**

@@ -39,6 +39,15 @@ public class CloudinaryImageStorageService implements ImageStorageService {
 
     @Override
     public UploadedImage uploadAlbumImage(Long profileId, MultipartFile file) {
+        return uploadImage("%s/%d".formatted(albumFolder, profileId), file);
+    }
+
+    @Override
+    public UploadedImage uploadProfileImage(Long profileId, MultipartFile file) {
+        return uploadImage("eventify/profiles/%d".formatted(profileId), file);
+    }
+
+    private UploadedImage uploadImage(String folder, MultipartFile file) {
         if (!configured) {
             throw new IllegalStateException("Cloudinary is not configured");
         }
@@ -51,7 +60,7 @@ public class CloudinaryImageStorageService implements ImageStorageService {
 
         try {
             Map<?, ?> result = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap(
-                    "folder", "%s/%d".formatted(albumFolder, profileId),
+                    "folder", folder,
                     "resource_type", "image"));
             return new UploadedImage(
                     String.valueOf(result.get("url")),

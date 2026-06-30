@@ -1,20 +1,26 @@
 package com.eventify.platform.profiles.interfaces.rest;
 
+import com.eventify.platform.profiles.application.internal.outboundservices.ImageStorageService;
+import com.eventify.platform.profiles.domain.model.commands.UpdateProfileCommand;
 import com.eventify.platform.profiles.domain.model.queries.GetAllProfilesQuery;
 import com.eventify.platform.profiles.domain.model.queries.GetProfileByEmailQuery;
 import com.eventify.platform.profiles.domain.model.queries.GetProfileByIdQuery;
 import com.eventify.platform.profiles.domain.services.ProfileCommandService;
 import com.eventify.platform.profiles.domain.services.ProfileQueryService;
 import com.eventify.platform.profiles.interfaces.rest.resources.CreateProfileResource;
+import com.eventify.platform.profiles.interfaces.rest.resources.ImageUploadResource;
 import com.eventify.platform.profiles.interfaces.rest.resources.ProfileResource;
+import com.eventify.platform.profiles.interfaces.rest.resources.UpdateProfileResource;
 import com.eventify.platform.profiles.interfaces.rest.transform.CreateProfileCommandFromResourceAssembler;
 import com.eventify.platform.profiles.interfaces.rest.transform.ProfileResourceFromEntityAssembler;
+import com.eventify.platform.profiles.interfaces.rest.transform.UpdateProfileCommandFromResourceAssembler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -35,10 +41,13 @@ public class ProfilesController {
 
     private final ProfileCommandService profileCommandService;
     private final ProfileQueryService profileQueryService;
+    private final ImageStorageService imageStorageService;
 
-    public ProfilesController(ProfileCommandService profileCommandService, ProfileQueryService profileQueryService) {
+    public ProfilesController(ProfileCommandService profileCommandService, ProfileQueryService profileQueryService,
+                              ImageStorageService imageStorageService) {
         this.profileCommandService = profileCommandService;
         this.profileQueryService = profileQueryService;
+        this.imageStorageService = imageStorageService;
     }
 
     /**
@@ -109,5 +118,45 @@ public class ProfilesController {
                 .map(ProfileResourceFromEntityAssembler::toResourceFromEntity)
                 .toList();
         return ResponseEntity.ok(profileResources);
+    }
+
+    @PutMapping("/{profileId}")
+    @Operation(summary = "Update Profile", description = "Updates profile contact, address and image URL.")
+    public ResponseEntity<ProfileResource> updateProfile(@PathVariable Long profileId,
+                                                         @RequestBody UpdateProfileResource updateProfileResource) {
+        var updateProfileCommand = UpdateProfileCommandFromResourceAssembler.toCommandFromResource(profileId, updateProfileResource);
+        var updatedProfileId = profileCommandService.handle(updateProfileCommand);
+        if (updatedProfileId.isEmpty()) return ResponseEntity.notFound().build();
+        var profile = profileQueryService.handle(new GetProfileByIdQuery(updatedProfileId.get()));
+        if (profile.isEmpty()) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(ProfileResourceFromEntityAssembler.toResourceFromEntity(profile.get()));
+    }
+
+    @PostMapping(value = "/{profileId}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Upload Profile Image", description = "Uploads a profile image and stores its Cloudinary URL in the profile.")
+    public ResponseEntity<?> uploadProfileImage(@PathVariable Long profileId, @RequestParam("file") MultipartFile file) {
+        var profile = profileQueryService.handle(new GetProfileByIdQuery(profileId));
+        if (profile.isEmpty()) return ResponseEntity.notFound().build();
+
+        var uploadedImage = imageStorageService.uploadProfileImage(profileId, file);
+        var updateProfileCommand = new UpdateProfileCommand(
+                profileId,
+                profile.get().getName().firstName(),
+                profile.get().getName().lastName(),
+                profile.get().getEmail().address(),
+                profile.get().getAddress().street(),
+                profile.get().getAddress().number(),
+                profile.get().getAddress().city(),
+                profile.get().getAddress().postalCode(),
+                profile.get().getAddress().country(),
+                uploadedImage.secureUrl()
+        );
+        profileCommandService.handle(updateProfileCommand);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ImageUploadResource(
+                uploadedImage.url(),
+                uploadedImage.secureUrl(),
+                uploadedImage.publicId()
+        ));
     }
 }

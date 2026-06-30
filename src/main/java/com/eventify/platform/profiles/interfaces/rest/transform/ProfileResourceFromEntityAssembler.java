@@ -33,7 +33,8 @@ public class ProfileResourceFromEntityAssembler {
                 entity.getAddress().postalCode(),
                 entity.getAddress().country(),
                 entity.getStreetAddress(),
-                entity.getType().name()
+                entity.getType().name(),
+                entity.getProfileImageUrl()
         );
     }
 }

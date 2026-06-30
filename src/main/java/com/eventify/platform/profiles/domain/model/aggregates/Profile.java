@@ -50,6 +50,9 @@ public class Profile extends AuditableAbstractAggregateRoot<Profile> {
     })
     private StreetAddress address;
 
+    @Column(name = "profile_image_url", length = 1024)
+    private String profileImageUrl;
+
     public Profile() {
         // Required by JPA
     }
@@ -108,6 +111,14 @@ public class Profile extends AuditableAbstractAggregateRoot<Profile> {
         this.name = new PersonName(firstName, lastName);
         this.email = new EmailAddress(email);
         this.address = new StreetAddress(street, number, city, postalCode, country);
+        return this;
+    }
+
+    public Profile updateInformation(String firstName, String lastName, String email, String street,
+                                     String number, String city, String postalCode, String country,
+                                     String profileImageUrl) {
+        updateInformation(firstName, lastName, email, street, number, city, postalCode, country);
+        this.profileImageUrl = profileImageUrl;
         return this;
     }
 

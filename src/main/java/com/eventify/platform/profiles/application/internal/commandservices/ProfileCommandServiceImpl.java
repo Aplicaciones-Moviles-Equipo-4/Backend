@@ -2,6 +2,7 @@ package com.eventify.platform.profiles.application.internal.commandservices;
 
 import com.eventify.platform.profiles.domain.model.aggregates.Profile;
 import com.eventify.platform.profiles.domain.model.commands.CreateProfileCommand;
+import com.eventify.platform.profiles.domain.model.commands.UpdateProfileCommand;
 import com.eventify.platform.profiles.domain.services.ProfileCommandService;
 import com.eventify.platform.profiles.infrastructure.persistence.jpa.repositories.ProfileRepository;
 import org.springframework.stereotype.Service;
@@ -47,5 +48,30 @@ public class ProfileCommandServiceImpl implements ProfileCommandService {
         } catch (Exception exception) {
             throw new IllegalArgumentException("Error while saving profile: %s".formatted(exception.getMessage()));
         }
+    }
+
+    @Override
+    public Optional<Long> handle(UpdateProfileCommand command) {
+        var profile = profileRepository.findById(command.profileId());
+        if (profile.isEmpty()) return Optional.empty();
+
+        var existingByEmail = profileRepository.findByEmail_Address(command.email());
+        if (existingByEmail.isPresent() && !existingByEmail.get().getId().equals(command.profileId())) {
+            throw new IllegalArgumentException("Profile with email %s already exists".formatted(command.email()));
+        }
+
+        profile.get().updateInformation(
+                command.firstName(),
+                command.lastName(),
+                command.email(),
+                command.street(),
+                command.number(),
+                command.city(),
+                command.postalCode(),
+                command.country(),
+                command.profileImageUrl()
+        );
+        profileRepository.save(profile.get());
+        return Optional.of(profile.get().getId());
     }
 }

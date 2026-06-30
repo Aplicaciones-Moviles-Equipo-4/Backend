@@ -33,6 +33,7 @@ public record ProfileResource(
         String postalCode,
         String country,
         String fullAddress,
-        String type
+        String type,
+        String profileImageUrl
 ) {
 }

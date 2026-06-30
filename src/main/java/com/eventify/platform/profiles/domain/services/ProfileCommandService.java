@@ -1,6 +1,7 @@
 package com.eventify.platform.profiles.domain.services;
 
 import com.eventify.platform.profiles.domain.model.commands.CreateProfileCommand;
+import com.eventify.platform.profiles.domain.model.commands.UpdateProfileCommand;
 
 import java.util.Optional;
 
@@ -22,4 +23,6 @@ public interface ProfileCommandService {
      * @return Optional containing the created profile ID if successful
      */
     Optional<Long> handle(CreateProfileCommand command);
+
+    Optional<Long> handle(UpdateProfileCommand command);
 }

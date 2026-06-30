@@ -29,6 +29,6 @@ public class AlbumQueryServiceImpl implements AlbumQueryService {
 
     @Override
     public Optional<Album> handle(GetAlbumByIdQuery query) {
-        return albumRepository.findById(query.albumId());
+        return albumRepository.findByIdWithPhotos(query.albumId());
     }
 }

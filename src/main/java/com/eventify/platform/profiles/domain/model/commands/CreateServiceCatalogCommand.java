@@ -9,6 +9,7 @@ package com.eventify.platform.profiles.domain.model.commands;
  * @param category catalog category
  * @param priceFrom lower bound of price range
  * @param priceTo upper bound of price range
+ * @param imageUrl optional public cover image URL
  */
 public record CreateServiceCatalogCommand(
         Long profileId,
@@ -16,7 +17,8 @@ public record CreateServiceCatalogCommand(
         String description,
         String category,
         Double priceFrom,
-        Double priceTo) {
+        Double priceTo,
+        String imageUrl) {
 
     public CreateServiceCatalogCommand {
         if (profileId == null || profileId <= 0) {

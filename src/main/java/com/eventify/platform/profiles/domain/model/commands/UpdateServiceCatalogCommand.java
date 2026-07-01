@@ -16,7 +16,8 @@ public record UpdateServiceCatalogCommand(
         String description,
         String category,
         Double priceFrom,
-        Double priceTo) {
+        Double priceTo,
+        String imageUrl) {
 
     public UpdateServiceCatalogCommand {
         if (serviceCatalogId == null || serviceCatalogId <= 0) {

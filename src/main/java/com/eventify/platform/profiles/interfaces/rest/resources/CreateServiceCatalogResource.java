@@ -9,6 +9,7 @@ package com.eventify.platform.profiles.interfaces.rest.resources;
  * @param category catalog category
  * @param priceFrom price range from
  * @param priceTo price range to
+ * @param imageUrl optional public cover image URL
  */
 public record CreateServiceCatalogResource(
         Long profileId,
@@ -16,5 +17,6 @@ public record CreateServiceCatalogResource(
         String description,
         String category,
         Double priceFrom,
-        Double priceTo) {
+        Double priceTo,
+        String imageUrl) {
 }

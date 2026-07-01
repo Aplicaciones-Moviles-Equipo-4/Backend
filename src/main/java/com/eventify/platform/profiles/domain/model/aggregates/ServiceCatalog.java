@@ -31,11 +31,14 @@ public class ServiceCatalog extends AuditableAbstractAggregateRoot<ServiceCatalo
     @Column(name = "price_to", nullable = false)
     private Double priceTo;
 
+    @Column(name = "image_url", length = 1024)
+    private String imageUrl;
+
     protected ServiceCatalog() {
         // Required by JPA
     }
 
-    public ServiceCatalog(Profile profile, String title, String description, String category, Double priceFrom, Double priceTo) {
+    public ServiceCatalog(Profile profile, String title, String description, String category, Double priceFrom, Double priceTo, String imageUrl) {
         this();
         this.profile = profile;
         this.title = title;
@@ -43,14 +46,16 @@ public class ServiceCatalog extends AuditableAbstractAggregateRoot<ServiceCatalo
         this.category = category;
         this.priceFrom = priceFrom;
         this.priceTo = priceTo;
+        this.imageUrl = imageUrl;
     }
 
-    public ServiceCatalog update(String title, String description, String category, Double priceFrom, Double priceTo) {
+    public ServiceCatalog update(String title, String description, String category, Double priceFrom, Double priceTo, String imageUrl) {
         this.title = title;
         this.description = description;
         this.category = category;
         this.priceFrom = priceFrom;
         this.priceTo = priceTo;
+        this.imageUrl = imageUrl;
         return this;
     }
 }

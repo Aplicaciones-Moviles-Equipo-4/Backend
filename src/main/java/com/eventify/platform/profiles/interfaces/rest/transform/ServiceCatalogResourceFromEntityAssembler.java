@@ -16,7 +16,8 @@ public class ServiceCatalogResourceFromEntityAssembler {
                 entity.getDescription(),
                 entity.getCategory(),
                 entity.getPriceFrom(),
-                entity.getPriceTo()
+                entity.getPriceTo(),
+                entity.getImageUrl()
         );
     }
 }

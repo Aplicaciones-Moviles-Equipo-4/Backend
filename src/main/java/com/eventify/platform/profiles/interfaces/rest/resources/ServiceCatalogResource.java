@@ -18,5 +18,6 @@ public record ServiceCatalogResource(
         String description,
         String category,
         Double priceFrom,
-        Double priceTo) {
+        Double priceTo,
+        String imageUrl) {
 }

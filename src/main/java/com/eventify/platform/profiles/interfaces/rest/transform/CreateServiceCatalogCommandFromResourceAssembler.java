@@ -15,7 +15,8 @@ public class CreateServiceCatalogCommandFromResourceAssembler {
                 resource.description(),
                 resource.category(),
                 resource.priceFrom(),
-                resource.priceTo()
+                resource.priceTo(),
+                resource.imageUrl()
         );
     }
 }

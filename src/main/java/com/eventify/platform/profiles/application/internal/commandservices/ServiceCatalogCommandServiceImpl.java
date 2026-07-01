@@ -32,7 +32,7 @@ public class ServiceCatalogCommandServiceImpl implements ServiceCatalogCommandSe
         if (profileOpt.isEmpty()) return Optional.empty();
         Profile profile = profileOpt.get();
         if (profile.getType() != ProfileType.ORGANIZER) return Optional.empty();
-        var catalog = new ServiceCatalog(profile, command.title(), command.description(), command.category(), command.priceFrom(), command.priceTo());
+        var catalog = new ServiceCatalog(profile, command.title(), command.description(), command.category(), command.priceFrom(), command.priceTo(), command.imageUrl());
         serviceCatalogRepository.save(catalog);
         return Optional.of(catalog.getId());
     }
@@ -42,7 +42,7 @@ public class ServiceCatalogCommandServiceImpl implements ServiceCatalogCommandSe
         var catalogOpt = serviceCatalogRepository.findById(command.serviceCatalogId());
         if (catalogOpt.isEmpty()) return;
         var catalog = catalogOpt.get();
-        catalog.update(command.title(), command.description(), command.category(), command.priceFrom(), command.priceTo());
+        catalog.update(command.title(), command.description(), command.category(), command.priceFrom(), command.priceTo(), command.imageUrl());
         serviceCatalogRepository.save(catalog);
     }
 

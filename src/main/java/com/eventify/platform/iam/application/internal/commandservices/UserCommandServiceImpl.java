@@ -8,6 +8,7 @@ import com.eventify.platform.iam.domain.model.commands.SignUpCommand;
 import com.eventify.platform.iam.domain.services.UserCommandService;
 import com.eventify.platform.iam.infrastructure.persistence.jpa.repositories.RoleRepository;
 import com.eventify.platform.iam.infrastructure.persistence.jpa.repositories.UserRepository;
+import com.eventify.platform.shared.interfaces.rest.exceptions.ResourceConflictException;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,7 +70,7 @@ public class UserCommandServiceImpl implements UserCommandService {
     @Override
     public Optional<User> handle(SignUpCommand command) {
         if (userRepository.existsByUsername(command.username()))
-            throw new RuntimeException("Username already exists");
+            throw new ResourceConflictException("Username already exists");
         var roles = command.roles().stream().map(role -> roleRepository.findFirstByNameOrderByIdAsc(role.getName()).orElseThrow(() -> new RuntimeException("Role name not found"))).toList();
         var user = new User(command.username(), hashingService.encode(command.password()), roles);
         userRepository.save(user);

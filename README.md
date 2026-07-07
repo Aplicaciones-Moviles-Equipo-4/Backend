@@ -109,5 +109,4 @@ This project is maintained by the AngelDevs-Web team and contributors:
 
 ---
 
-**Built with ❤️ by AngelDevs-Web Team**
-yo tmb hago el amor a mis apps
+locooooooooooooooooooooo

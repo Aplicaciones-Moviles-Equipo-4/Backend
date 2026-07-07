@@ -11,7 +11,10 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 
 import java.util.Date;
-
+/**
+ * Represents a review entity in the system.
+ * A review is associated with a profile and a social event.
+ */
 @Getter
 @Entity
 public class Review extends AuditableAbstractAggregateRoot<Review> {
@@ -28,10 +31,15 @@ public class Review extends AuditableAbstractAggregateRoot<Review> {
     private SocialEventId socialEventId;
 
     /**
-     * Default constructor for JPA
+     * Default constructor for JPA.
      */
     public Review () {}
 
+    /**
+     * Constructs a Review entity using the provided CreateReviewCommand.
+     *
+     * @param command the command containing the data to create a review
+     */
     public Review(CreateReviewCommand command){
         this();
         this.content = command.content();
@@ -42,14 +50,34 @@ public class Review extends AuditableAbstractAggregateRoot<Review> {
         this.socialEventId = new SocialEventId(command.socialEventId());
     }
 
+    /**
+     * Retrieves the profile ID associated with this review.
+     *
+     * @return the profile ID
+     */
     public Long getProfileId() {
         return this.profileId.profileId();
     }
 
+    /**
+     * Retrieves the social event ID associated with this review.
+     *
+     * @return the social event ID
+     */
     public Long getSocialEventId() {
         return this.socialEventId.socialEventId();
     }
 
+    /**
+     * Updates the review information with the provided data.
+     *
+     * @param content         the updated content of the review
+     * @param fullName        the updated full name of the reviewer
+     * @param socialEventDate the updated date of the social event
+     * @param rating          the updated rating of the review
+     * @param profileId       the updated profile ID
+     * @return the updated Review instance
+     */
     public Review updateInformation(String content, String fullName, Date socialEventDate, Integer rating, Long profileId){
         if (content != null && !content.isBlank()) {
             this.content = content;

@@ -5,6 +5,7 @@ import com.eventify.platform.planning.domain.model.queries.ExistsByQuoteIdQuery;
 import com.eventify.platform.planning.domain.model.queries.GetAllQuotesByHostIdQuery;
 import com.eventify.platform.planning.domain.model.queries.GetAllQuotesByOrganizerIdQuery;
 import com.eventify.platform.planning.domain.model.queries.GetQuoteByQuoteIdQuery;
+import com.eventify.platform.planning.domain.model.queries.GetAllQuotesByCustomerIdQuery;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,4 +19,6 @@ public interface QuoteQueryService {
     Optional<Quote> handle(GetQuoteByQuoteIdQuery query);
 
     boolean handle(ExistsByQuoteIdQuery query);
+
+    List<Quote> handle(GetAllQuotesByCustomerIdQuery query);
 }

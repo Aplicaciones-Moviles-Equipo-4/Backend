@@ -1,7 +1,6 @@
 package com.eventify.platform.planning.interfaces.rest;
-//import com.eventify.platform.planning.application.internal.outboundservices.acl.PlanningExternalProfileService;
-import com.eventify.platform.planning.domain.model.queries.GetAllQuotesByOrganizerIdQuery;
-import com.eventify.platform.planning.domain.services.QuoteCommandService;
+
+import com.eventify.platform.planning.domain.model.queries.GetAllQuotesByCustomerIdQuery;
 import com.eventify.platform.planning.domain.services.QuoteQueryService;
 import com.eventify.platform.planning.interfaces.rest.resources.QuoteResource;
 import com.eventify.platform.planning.interfaces.rest.transform.QuoteResourceFromEntityAssembler;
@@ -16,35 +15,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-// ...existing imports...
-
-import java.util.stream.Collectors; // Ensure this import is present
-
 @RestController
-@RequestMapping(value="/api/v1/organizers/{organizerId}/quotes",produces = APPLICATION_JSON_VALUE)
-@Tag(name="Organizer")
-public class OrganizerQuotesController {
-    private final QuoteCommandService quoteCommandService;
-    private final QuoteQueryService  quoteQueryService;
+@RequestMapping(value = "/api/v1/customers/{customerId}/quotes", produces = APPLICATION_JSON_VALUE)
+@Tag(name = "Customer")
+public class CustomerQuotesController {
 
-    public OrganizerQuotesController(QuoteCommandService quoteCommandService, QuoteQueryService quoteQueryService) {
-        this.quoteCommandService = quoteCommandService;
+    private final QuoteQueryService quoteQueryService;
+
+    public CustomerQuotesController(QuoteQueryService quoteQueryService) {
         this.quoteQueryService = quoteQueryService;
     }
 
     @GetMapping
-    @Operation(summary = "Get quotes of an organizer", description = "Get quotes created by an organizer")
+    @Operation(summary = "Get quotes of a customer", description = "Get quotes where the hostId matches the customer ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Quotes retrieved successfully"),
             @ApiResponse(responseCode = "404", description = "Quotes not found")
     })
-    public ResponseEntity<List<QuoteResource>> getQuotesForOrganizerWithOrganizerId(@PathVariable Long organizerId){
-
-        var getAllQuotesByOrganizerId = new GetAllQuotesByOrganizerIdQuery(organizerId);
-        var quotes = quoteQueryService.handle(getAllQuotesByOrganizerId);
+    public ResponseEntity<List<QuoteResource>> getQuotesForCustomerWithCustomerId(@PathVariable Long customerId) {
+        var getAllQuotesByCustomerId = new GetAllQuotesByCustomerIdQuery(customerId);
+        var quotes = quoteQueryService.handle(getAllQuotesByCustomerId); // Ensure this method exists in QuoteQueryService
         var quoteResources = quotes.stream()
                                     .map(QuoteResourceFromEntityAssembler::toResourceFromEntity)
                                     .collect(Collectors.toList()); // Use Collectors.toList() to collect the stream

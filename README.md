@@ -108,5 +108,4 @@ This project is maintained by the AngelDevs-Web team and contributors:
 |     Jean Pierr Aldave Aldave     | U202120005 |
 
 ---
-
-gonzalo x dieztra 
+xuxa

@@ -108,5 +108,4 @@ This project is maintained by the AngelDevs-Web team and contributors:
 |     Jean Pierr Aldave Aldave     | U202120005 |
 
 ---
-
-**Built with ❤️ by AngelDevs-Web Team**
+xuxa

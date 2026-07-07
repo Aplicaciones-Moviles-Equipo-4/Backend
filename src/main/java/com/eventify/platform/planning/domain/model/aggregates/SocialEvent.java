@@ -30,7 +30,12 @@ public class SocialEvent extends AuditableAbstractAggregateRoot<SocialEvent>
     @Embedded
     private SocialEventStatus status;
 
-
+    /**
+     * Id of the organizer (profileId) that owns this event. Nullable for legacy rows created
+     * before ownership was tracked.
+     */
+    @Column(name = "organizer_id")
+    private Long organizerId;
 
 
 
@@ -43,15 +48,16 @@ public class SocialEvent extends AuditableAbstractAggregateRoot<SocialEvent>
      * @param date         the scheduled date
      * @param customerName the customer full name
      * @param status       the current status of the event
+     * @param organizerId  the id of the organizer (profileId) that owns this event
      */
     public SocialEvent(SocialEventTitle title, Place place, SocialEventDate date,
-                       CustomerName customerName, SocialEventStatus status) {
+                       CustomerName customerName, SocialEventStatus status, Long organizerId) {
         this.title = title;
         this.date = date;
         this.customerName = customerName;
         this.place = place;
         this.status = status;
-
+        this.organizerId = organizerId;
     }
 
     protected SocialEvent() {}
@@ -76,6 +82,10 @@ public class SocialEvent extends AuditableAbstractAggregateRoot<SocialEvent>
 
     public String getEventStatus() {
         return status.valueStatus();
+    }
+
+    public Long getOrganizerId() {
+        return organizerId;
     }
 
 

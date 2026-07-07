@@ -6,10 +6,12 @@ import com.eventify.platform.planning.domain.model.valueobjects.QuoteId;
 import com.eventify.platform.planning.domain.services.QuoteCommandService;
 import com.eventify.platform.planning.infrastructure.persistence.jpa.repositories.QuoteRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
+@Transactional
 public class QuoteCommandServiceImpl implements QuoteCommandService {
     private final QuoteRepository quoteRepository;
 
@@ -41,6 +43,7 @@ public class QuoteCommandServiceImpl implements QuoteCommandService {
 
     @Override
     public void handle(DeleteQuoteCommand command){
+        verifyIfQuoteExistsById(command.quoteId());
         try{
             quoteRepository.deleteById(command.quoteId());
         }catch(Exception e){

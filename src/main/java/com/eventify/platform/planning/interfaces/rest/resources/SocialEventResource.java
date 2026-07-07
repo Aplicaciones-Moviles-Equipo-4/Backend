@@ -11,6 +11,7 @@ public record SocialEventResource(Long id,
                                   LocalDate date,
                                   String customerName,
                                   String place,
-                                  String status
+                                  String status,
+                                  Long organizerId
                                   ) {
 }

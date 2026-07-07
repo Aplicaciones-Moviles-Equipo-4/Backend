@@ -20,8 +20,8 @@ public class SocialEventResourceFromEntityAssembler {
                 entity.getDate(),
                 entity.getCustomerName(),
                 entity.getPlace(),
-                entity.getEventStatus()
-
+                entity.getEventStatus(),
+                entity.getOrganizerId()
         );
     }
 

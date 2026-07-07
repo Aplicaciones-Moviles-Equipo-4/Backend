@@ -4,6 +4,7 @@ import com.eventify.platform.planning.domain.model.queries.GetAllSocialEventQuer
 import com.eventify.platform.planning.domain.model.queries.GetSocialEventByStatusQuery;
 import com.eventify.platform.planning.domain.model.queries.GetSocialEventByTitleQuery;
 import com.eventify.platform.planning.domain.model.queries.GetSocialEventsByOrganizerQuery;
+import com.eventify.platform.planning.domain.model.queries.GetSocialEventsByOrganizerIdQuery;
 
 import java.util.List;
 import java.util.Optional;
@@ -46,6 +47,14 @@ public interface SocialEventQueryService {
      * @return list of social events organized by the specified customer
      */
     List<SocialEvent> handle(GetSocialEventsByOrganizerQuery query);
+
+    /**
+     * Retrieves social events owned by a given organizer (profileId).
+     *
+     * @param query the query containing the organizer id filter
+     * @return list of social events owned by the specified organizer
+     */
+    List<SocialEvent> handle(GetSocialEventsByOrganizerIdQuery query);
 }
 
 

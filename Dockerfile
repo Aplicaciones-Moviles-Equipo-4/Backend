@@ -12,7 +12,7 @@
 # Step 1: Build the application using Maven
 
 # Use a lightweight OpenJDK 24 base image
-FROM maven:3.9.9-eclipse-temurin-24 AS build
+FROM maven:3.9.9-eclipse-temurin-21 AS build
 # Set the active profile for the Spring Boot application
 ENV SPRING_PROFILES_ACTIVE=prod
 # Set the working directory inside the container
@@ -25,7 +25,7 @@ COPY src ./src
 RUN mvn package -DskipTests
 
 # Step 2: Create a runtime image
-FROM eclipse-temurin:24-jre AS runtime
+FROM eclipse-temurin:21-jre AS runtime
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 

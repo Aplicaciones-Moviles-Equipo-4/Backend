@@ -9,6 +9,7 @@ import com.eventify.platform.planning.domain.model.valueobjects.*;
 import com.eventify.platform.planning.domain.services.SocialEventCommandService;
 import com.eventify.platform.planning.infrastructure.persistence.jpa.repositories.SocialEventRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -16,6 +17,7 @@ import java.util.Optional;
  * Implementation of SocialEventCommandService.
  */
 @Service
+@Transactional
 public class SocialEventCommandServiceImpl implements SocialEventCommandService {
 
     private final SocialEventRepository socialEventRepository;
@@ -40,7 +42,7 @@ public class SocialEventCommandServiceImpl implements SocialEventCommandService 
             var status = new SocialEventStatus(command.status());
 
             // Create and save the aggregate
-            var socialEvent = new SocialEvent(title, place, date, customerName, status);
+            var socialEvent = new SocialEvent(title, place, date, customerName, status, command.organizerId());
             var savedSocialEvent = socialEventRepository.save(socialEvent);
 
             return Optional.of(savedSocialEvent);

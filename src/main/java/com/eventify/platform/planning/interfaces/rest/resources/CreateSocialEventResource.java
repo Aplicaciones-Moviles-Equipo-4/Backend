@@ -7,7 +7,8 @@ public record CreateSocialEventResource(
         String place,
         LocalDate date,
         String customerName,
-        String status
+        String status,
+        Long organizerId
 ) {
     public CreateSocialEventResource {
         if (title == null || title.isBlank()) {

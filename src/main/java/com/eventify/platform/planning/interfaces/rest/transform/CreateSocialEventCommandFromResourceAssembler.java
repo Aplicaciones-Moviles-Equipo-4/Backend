@@ -19,7 +19,8 @@ public class CreateSocialEventCommandFromResourceAssembler {
                 resource.date(),
                 resource.customerName(),
                 resource.place(),
-                resource.status()
+                resource.status(),
+                resource.organizerId()
         );
     }
 }

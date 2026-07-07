@@ -29,6 +29,11 @@ public interface SocialEventRepository extends JpaRepository<SocialEvent, Long> 
     List<SocialEvent> findByCustomerNameCustomerName(String customerName);
 
     /**
+     * Finds social events owned by a given organizer (profileId).
+     */
+    List<SocialEvent> findByOrganizerId(Long organizerId);
+
+    /**
      * Finds social events by title containing a specific string (case-insensitive).
      */
     List<SocialEvent> findByTitleTitleContainingIgnoreCase(String title);

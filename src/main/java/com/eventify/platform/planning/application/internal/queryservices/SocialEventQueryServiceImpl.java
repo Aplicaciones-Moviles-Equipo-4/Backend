@@ -5,6 +5,7 @@ import com.eventify.platform.planning.domain.model.queries.GetAllSocialEventQuer
 import com.eventify.platform.planning.domain.model.queries.GetSocialEventByStatusQuery;
 import com.eventify.platform.planning.domain.model.queries.GetSocialEventByTitleQuery;
 import com.eventify.platform.planning.domain.model.queries.GetSocialEventsByOrganizerQuery;
+import com.eventify.platform.planning.domain.model.queries.GetSocialEventsByOrganizerIdQuery;
 import com.eventify.platform.planning.domain.services.SocialEventQueryService;
 import com.eventify.platform.planning.infrastructure.persistence.jpa.repositories.SocialEventRepository;
 import org.springframework.stereotype.Service;
@@ -41,5 +42,10 @@ public class SocialEventQueryServiceImpl implements SocialEventQueryService {
     @Override
     public List<SocialEvent> handle(GetSocialEventsByOrganizerQuery query) {
         return socialEventRepository.findByCustomerNameCustomerName(query.customerName());
+    }
+
+    @Override
+    public List<SocialEvent> handle(GetSocialEventsByOrganizerIdQuery query) {
+        return socialEventRepository.findByOrganizerId(query.organizerId());
     }
 }

@@ -9,6 +9,7 @@ import com.eventify.platform.iam.domain.services.UserCommandService;
 import com.eventify.platform.iam.infrastructure.persistence.jpa.repositories.RoleRepository;
 import com.eventify.platform.iam.infrastructure.persistence.jpa.repositories.UserRepository;
 import com.eventify.platform.shared.interfaces.rest.exceptions.ResourceConflictException;
+import com.eventify.platform.shared.interfaces.rest.exceptions.InvalidCredentialsException;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,9 +53,9 @@ public class UserCommandServiceImpl implements UserCommandService {
     public Optional<ImmutablePair<User, String>> handle(SignInCommand command) {
         var user = userRepository.findByUsername(command.username());
         if (user.isEmpty())
-            throw new RuntimeException("User not found");
+            throw new InvalidCredentialsException("Invalid username or password");
         if (!hashingService.matches(command.password(), user.get().getPassword()))
-            throw new RuntimeException("Invalid password");
+            throw new InvalidCredentialsException("Invalid username or password");
         var token = tokenService.generateToken(user.get().getUsername());
         return Optional.of(ImmutablePair.of(user.get(), token));
     }

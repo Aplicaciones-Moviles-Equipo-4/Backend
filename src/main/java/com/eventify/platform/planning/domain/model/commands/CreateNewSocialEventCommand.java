@@ -17,7 +17,8 @@ public record CreateNewSocialEventCommand(
     LocalDate date,
     String customerName,
     String place,
-    String status
+    String status,
+    Long organizerId
 ) {
 
     public CreateNewSocialEventCommand {

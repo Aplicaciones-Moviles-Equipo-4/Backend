@@ -6,6 +6,7 @@ import com.eventify.platform.profiles.domain.model.commands.UpdateProfileCommand
 import com.eventify.platform.profiles.domain.services.ProfileCommandService;
 import com.eventify.platform.profiles.infrastructure.persistence.jpa.repositories.ProfileRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -20,6 +21,7 @@ import java.util.Optional;
  * @since 1.0
  */
 @Service
+@Transactional
 public class ProfileCommandServiceImpl implements ProfileCommandService {
 
     private final ProfileRepository profileRepository;
